@@ -1,0 +1,53 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.scroll-painting {
+    width: 100%;
+    height: 640px;
+    background: #999;
+    overflow: hidden;
+}
+.scroll-painting-inner {
+    width: 4800px;
+    height: 640px;
+    background: #999;
+}
+.scroll-painting-inner > div{
+    float: left;
+    width: 480px;
+    height: 640px;
+}
+.scroll-painting-inner > div:nth-child(1){
+    background-color: #006666;
+}
+.scroll-painting-inner > div:nth-child(2){
+    background-color: #0066dd;
+}
+.scroll-painting-inner > div:nth-child(3){
+    background-color: #9933ff;
+}
+.scroll-painting-inner > div:nth-child(4){
+    background-color: #009966;
+}
+.scroll-painting-inner > div:nth-child(5){
+    background-color: #cccc33;
+}
+.scroll-painting-inner > div:nth-child(6){
+    background-color: #ff6666;
+}
+.scroll-painting-inner > div:nth-child(7){
+    background-color: #ffcc66;
+}
+.scroll-painting-inner > div:nth-child(8){
+    background-color: #6699ff;
+}
+.scroll-painting-inner > div:nth-child(9){
+    background-color: #66ffff;
+}
+.scroll-painting-inner > div:nth-child(10){
+    background-color: #ffcc99;
+}

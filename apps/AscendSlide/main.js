@@ -4,136 +4,137 @@
  */
 
 $(function () {
+
     function AscendSlide($this) {
-        this.init($this);
+        this.init($this, {
+            duration: 800,
+            scrollEase: 'cubic-bezier(.82, 0, .42, 1)'
+        });
     }
 
-    AscendSlide.prototype.init = function ($this) {
+    AscendSlide.prototype.init = function ($this, opt) {
         var self = this;
 
-        this.ele = $this;
-        this.outStack = [];
-        this.inStack = [];
-        this.lock = false;
-        this.lockTime = 800;
+        this.opt = opt;
+        this.wrap = $this;
+        this.scollView = $('.ascend-slide-scroll', this.wrap);
+        this.pagesWrap = $('.ascend-slide-pages', this.wrap);
+        this.pages = $('.ascend-slide-page', this.wrap);
 
-        this.pages = this.ele.children('div');
+        this.currentIndex = 0;
 
-        this.clickerList = $(null);
+        this.appendClicker();
+        this.setPagesHeight();
 
-        var clickerFn = function (event) {
-            self.locker(function () {
-                self.jump($(event.currentTarget).index());
-            });
-//
-//            if (count !== 0) {
-//                var fn = count > 0 ? self.pop : self.push;
-//                count = Math.abs(count);
-//
-//                for (var i = 0; i < count; ++i) {
-//                    fn.apply(self);
-//                }
-//            }
-        };
+        this.onClickerEvent();
+        this.onWindowEvent();
+        this.onWrapEvent();
 
-        this.pages.addClass('ascend-slide-page')
-            .each(function (index, ele) {
+        this.scollView.on('mousewheel', function (event, delta) {
+            var index = delta > 0 ? self.currentIndex - 1 : self.currentIndex + 1;
 
-                var $ele = $(ele),
-                    clicker = $('<li/>')
-                        .append('<a><span class="dot"/><span class="text">' + $ele.attr('data-text') + '</span></a>')
-                        .on('click', clickerFn);
+            self.scrollTo(index, self.opt.duration);
+            event.preventDefault();
+        });
+    };
 
-                if (index === self.pages.length - 1) {
-                    clicker.addClass('current');
-                    $ele.addClass('current');
-                }
-                self.clickerList = clicker.add(self.clickerList);
-                self.inStack.push({
-                    clicker: clicker,
-                    page: $ele
-                });
-            });
+    AscendSlide.prototype.setPagesHeight = function () {
+        this.pagesHeight = this.wrap.height();
+        this.pages.height(this.pagesHeight);
+        this.scrollTo(this.currentIndex, 0);
+    };
 
-        this.clicker = $('<div class="ascend-slide-clicker"/>').append($('<ul/>').append(this.clickerList));
-        this.ele.append(this.clicker);
-        this.clicker.css('margin-top', '-' + (this.clicker.height() / 2) + 'px');
+    AscendSlide.prototype.appendClicker = function (index) {
+        var self = this;
 
-        this.ele.on('mousewheel', function (event) {
-            self.locker(function () {
-                if (event.deltaY === 1) {
-                    self.push();
-                } else {
-                    self.pop();
-                }
-            });
+        this.clickerList = $();
+        this.pages.each(function (index, page) {
+            self.clickerList = self.clickerList.add(self.clicker($(page).attr('data-text')));
         });
 
-        $(window).on('keydown', function (event) {
-            self.locker(function () {
+        this.pages.eq(this.currentIndex).addClass('current');
+        this.clickerList.eq(this.currentIndex).addClass('current');
+
+        this.clicker = $('<div class="ascend-slide-clicker">').append($('<ul/>').append(this.clickerList));
+        this.wrap.append(this.clicker);
+
+        this.clicker.css('margin-top', '-' + (this.clicker.height() / 2) + 'px');
+    };
+
+    AscendSlide.prototype.onClickerEvent = function () {
+        var self = this;
+
+        this.clickerList.on('click', function (event) {
+            self.scrollTo($(event.currentTarget).index(), self.opt.duration);
+        });
+    };
+
+    AscendSlide.prototype.onWindowEvent = function () {
+        var self = this;
+
+        $(window)
+            .on('keydown', function (event) {
                 switch (event.keyCode) {
                     case 38:
-                        self.push();
+                        self.scrollTo(self.currentIndex - 1, self.opt.duration);
                         break;
                     case 40:
-                        self.pop();
+                        self.scrollTo(self.currentIndex + 1, self.opt.duration);
                         break;
                 }
+            })
+            .on('resize', function () {
+                self.setPagesHeight();
             });
-        });
     };
 
-    AscendSlide.prototype.pop = function () {
-        if (this.inStack.length > 1) {
-
-            var ascend = this.inStack.pop();
-            ascend.page.addClass('ascend').removeClass('current');
-            ascend.clicker.removeClass('current');
-
-            var current = this.inStack[this.inStack.length - 1];
-            current.page.addClass('current');
-            current.clicker.addClass('current');
-
-            this.outStack.push(ascend);
-        }
-    };
-
-    AscendSlide.prototype.push = function () {
-        if (this.outStack.length) {
-
-            var current = this.outStack.pop();
-            current.page.removeClass('ascend').addClass('current');
-            current.clicker.addClass('current');
-
-            var ascend = this.inStack[this.inStack.length - 1];
-            ascend.page.removeClass('current');
-            ascend.clicker.removeClass('current');
-
-            this.inStack.push(current);
-        }
-    };
-
-    AscendSlide.prototype.jump = function (index) {
-        var self = this,
-            count = index - self.outStack.length;
-        if (count !== 0) {
-            if (Math.abs(count) === 1) {
-                count > 0 ? self.pop() : self.push();
-            } else if (0) {
-
-            }
-        }
-    };
-
-    AscendSlide.prototype.locker = function (fn) {
+    AscendSlide.prototype.onWrapEvent = function () {
         var self = this;
+
+        if ($.isTouchCapable()) {
+            this.wrap
+                .on('swipeup', function () {
+                    self.scrollTo(self.currentIndex + 1, self.opt.duration);
+                })
+                .on('swipedown', function () {
+                    self.scrollTo(self.currentIndex - 1, self.opt.duration);
+                });
+        }
+    };
+
+    AscendSlide.prototype.clicker = function (text) {
+        return $('<li/>').append('<a><span class="dot"/><span class="text">' + text + '</span></a>');
+    };
+
+    AscendSlide.prototype.scrollTo = function (index, duration) {
         if (!this.lock) {
             this.lock = true;
-            setTimeout(function () {
-                self.lock = false;
-            }, this.lockTime);
-            fn();
+            var self = this;
+
+            if (index < 0) {
+                index = 0;
+            } else if (index > this.pages.length - 1) {
+                index = this.pages.length - 1;
+            }
+
+            this.pagesWrap.transition({
+                y: -index * this.pagesHeight,
+                complete: function () {
+                    self.lock = false;
+                }
+            }, duration || 0, this.opt.scrollEase);
+
+            this.setCurrentIndex(index);
         }
+    };
+
+    AscendSlide.prototype.setCurrentIndex = function (index) {
+        this.pages.eq(this.currentIndex).removeClass('current');
+        this.clickerList.eq(this.currentIndex).removeClass('current');
+        this.pages.eq(index).addClass('current');
+        this.clickerList.eq(index).addClass('current');
+
+        this.currentIndex = index;
     };
 
     $.fn.ascendSlide = function () {

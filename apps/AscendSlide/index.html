@@ -2,21 +2,43 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
     <link rel="stylesheet" href="style.css"/>
     <script src="../../bowers/underscore/underscore.js"></script>
     <script src="../../bowers/jquery/dist/jquery.js"></script>
     <script src="../../bowers/jquery-mousewheel/jquery.mousewheel.js"></script>
+    <script src="../../bowers/jquery-mobile-events/src/jquery.mobile-events.js"></script>
+    <script src="../../bowers/jquery.transit/jquery.transit.js"></script>
     <script src="main.js"></script>
     <title>AscendSlide</title>
 </head>
 <body>
 <div class="ascend-slide">
-    <div data-text="Home"><img src="../../images/mountain.jpg" alt=""/></div>
-    <div data-text="Design"><img src="../../images/forest.jpg" alt=""/></div>
-    <div data-text="Artist"><img src="../../images/mountain.jpg" alt=""/></div>
-    <div data-text="Handwork"><img src="../../images/forest.jpg" alt=""/></div>
-    <div data-text="Comfort"><img src="../../images/mountain.jpg" alt=""/></div>
-    <div data-text="Clear"><img src="../../images/forest.jpg" alt=""/></div>
+    <div class="ascend-slide-scroll">
+        <div class="ascend-slide-pages">
+            <section data-text="Home" class="ascend-slide-page">
+                <img src="../../images/forest.jpg" alt=""/>
+            </section>
+            <section data-text="Design" class="ascend-slide-page">
+                <img src="../../images/mountain.jpg" alt=""/>
+            </section>
+            <section data-text="Artist" class="ascend-slide-page">
+                <img src="../../images/forest.jpg" alt=""/>
+            </section>
+            <section data-text="Handwork" class="ascend-slide-page">
+                <img src="../../images/mountain.jpg" alt=""/>
+            </section>
+            <section data-text="Comfort" class="ascend-slide-page">
+                <img src="../../images/forest.jpg" alt=""/>
+            </section>
+            <section data-text="Clear" class="ascend-slide-page">
+                <img src="../../images/mountain.jpg" alt=""/>
+            </section>
+        </div>
+    </div>
 </div>
 </body>
 </html>
