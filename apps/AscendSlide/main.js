@@ -31,10 +31,13 @@ $(function () {
         this.onWrapEvent();
 
         this.scollView.on('mousewheel', function (event, delta) {
-            var index = delta > 0 ? self.currentIndex - 1 : self.currentIndex + 1;
+            console.log(delta)
+            if(Math.abs(delta) > 30){
+                var index = delta > 0 ? self.currentIndex - 1 : self.currentIndex + 1;
 
-            self.scrollTo(index, self.opt.duration);
-            event.preventDefault();
+                self.scrollTo(index, self.opt.duration);
+                event.preventDefault();
+            }
         });
     };
 
@@ -86,12 +89,16 @@ $(function () {
             .on('resize', function () {
                 self.setPagesHeight();
             });
+
+        $('body').on('mousewheel', function(event){
+            event.preventDefault();
+        });
     };
 
     AscendSlide.prototype.onWrapEvent = function () {
         var self = this;
 
-        if ($.isTouchCapable()) {
+        if ($.isTouchCapable() || 1) {
             this.wrap
                 .on('swipeup', function () {
                     self.scrollTo(self.currentIndex + 1, self.opt.duration);

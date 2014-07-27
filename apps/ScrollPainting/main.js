@@ -5,11 +5,14 @@
 
 $(function () {
 
+    var timestamp;
+
     $.fn.scrollPainting = function () {
         return this.each(function () {
             var $this = $(this);
-            $this.mousewheel(function (event, delta) {
-                $this.scrollLeft($this.scrollLeft() - delta * 100);
+            $this.on('mousewheel', function (event, delta) {
+                console.log(delta)
+                $this.scrollLeft($this.scrollLeft() - delta);
                 event.preventDefault();
             });
         });
