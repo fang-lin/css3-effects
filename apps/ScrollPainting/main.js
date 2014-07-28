@@ -10,9 +10,8 @@ $(function () {
     $.fn.scrollPainting = function () {
         return this.each(function () {
             var $this = $(this);
-            $this.on('mousewheel', function (event, delta) {
-                console.log(delta)
-                $this.scrollLeft($this.scrollLeft() - delta);
+            $this.on('wheel', function (event) {
+                $this.scrollLeft($this.scrollLeft() + event.deltaY);
                 event.preventDefault();
             });
         });

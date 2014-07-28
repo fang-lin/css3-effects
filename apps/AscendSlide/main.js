@@ -30,9 +30,12 @@ $(function () {
         this.onWindowEvent();
         this.onWrapEvent();
 
-        this.scollView.on('mousewheel', function (event, delta) {
-            console.log(delta)
-            if(Math.abs(delta) > 30){
+        this.scollView.on('wheel', function (event) {
+            var delta = event.deltaY;
+
+            console.log(delta);
+
+            if (Math.abs(delta) > 30) {
                 var index = delta > 0 ? self.currentIndex - 1 : self.currentIndex + 1;
 
                 self.scrollTo(index, self.opt.duration);
@@ -90,7 +93,7 @@ $(function () {
                 self.setPagesHeight();
             });
 
-        $('body').on('mousewheel', function(event){
+        $('body').on('mousewheel', function (event) {
             event.preventDefault();
         });
     };
