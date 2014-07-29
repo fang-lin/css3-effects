@@ -33,10 +33,8 @@ $(function () {
         this.scollView.on('wheel', function (event) {
             var delta = event.deltaY;
 
-            console.log(delta);
-
             if (Math.abs(delta) > 30) {
-                var index = delta > 0 ? self.currentIndex - 1 : self.currentIndex + 1;
+                var index = delta < 0 ? self.currentIndex - 1 : self.currentIndex + 1;
 
                 self.scrollTo(index, self.opt.duration);
                 event.preventDefault();
@@ -50,7 +48,7 @@ $(function () {
         this.scrollTo(this.currentIndex, 0);
     };
 
-    AscendSlide.prototype.appendClicker = function (index) {
+    AscendSlide.prototype.appendClicker = function () {
         var self = this;
 
         this.clickerList = $();
